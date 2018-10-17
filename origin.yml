@@ -1,18 +1,18 @@
 version: '3'
-
 services:
   cron:
-    build:
-      context: docker/cron
-      dockerfile: Dockerfile 
-    image: ayoubensalem/magento1-cron
+    image: fballiano/magento2-cron
     depends_on:
       - apache
       - varnish
-    networks:
-      - appnet
+    links:
+      - db
+      - cache
+      - clusterdata
+      - apache
+      - varnish
     volumes:
-      - magento_data:/var/www/html
+      - ./magento2:/var/www/html
       - ./varnish.secret:/varnish.secret
       # Enable the next line if you want to add a custom php.ini
       #- ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
@@ -21,8 +21,8 @@ services:
     image: fballiano/nginx-ssl-for-magento2
     depends_on:
       - varnish
-    networks:
-      - appnet
+    links:
+      - varnish
     ports:
       - "443:443"
 
@@ -33,8 +33,8 @@ services:
       - "6082:6082"
     depends_on:
       - apache
-    networks:
-      - appnet 
+    links:
+      - apache
     volumes:
       - ./varnish.vcl:/etc/varnish/default.vcl
       - ./varnish.secret:/etc/varnish/secret
@@ -42,47 +42,38 @@ services:
       - CACHE_SIZE=256M
 
   apache:
-    build:
-      context: .
-      dockerfile: docker/app/Dockerfile
-    image: ayoubensalem/magento1-app
+    image: fballiano/magento2-apache-php
     depends_on:
       - db
-    networks:
-      - appnet
+      - cache
+      - clusterdata
+    links:
+      - db
+      - cache
+      - clusterdata
     volumes:
-      - magento_data:/var/www/html
+      - ./magento:/var/www/html
       - ~/.composer/auth.json:/root/.composer/auth.json
       # Enable the next line if you want to add a custom php.ini
       #- ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
 
   db:
-    image: mysql:5.7
+    image: mariadb
     ports:
       - "3306:3306"
-    # volumes:
-    #   - dbdata:/var/lib/mysql
-    networks:
-      - appnet
+    volumes:
+      - dbdata:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=19641995
-      - MYSQL_DATABASE=magento
-      - MYSQL_USER=magento
-      - MYSQL_PASSWORD=19641995
- 
+      - MYSQL_ROOT_PASSWORD=magento2
+      - MYSQL_DATABASE=magento2
+      - MYSQL_USER=magento2
+      - MYSQL_PASSWORD=magento2
+
   cache:
     image: fballiano/redis-volatile
-    networks:
-      - appnet 
 
   clusterdata:
     image: fballiano/redis-volatile
-    networks: 
-      - appnet 
 
-
-networks:
-  appnet:
-    driver: bridge
 volumes:
-  magento_data:
+  dbdata:

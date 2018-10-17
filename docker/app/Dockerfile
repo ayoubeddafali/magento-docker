@@ -17,9 +17,11 @@ RUN chmod +x install.sh \
 RUN curl -O https://files.magerun.net/n98-magerun.phar \
 && chmod +x ./n98-magerun.phar  \
 && mv n98-magerun.phar /usr/local/bin/  \
-&& ./mage mage-setup .
+&& ./mage mage-setup . \
+&& chmod -R 777 . 
 
+VOLUME /var/www/html
 
-ENTRYPOINT [ "./install.sh" ]
+#ENTRYPOINT [ "./install.sh" ]
 
 CMD ["/start.sh"]

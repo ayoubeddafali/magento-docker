@@ -1,7 +1,12 @@
 #!/usr/bin/env  bash
 
-/wait-for-it.sh db:3306
+/wait-for-it.sh -t 0 db:3306
 
+export IP=$(ip addr show eth0  | grep inet | tr -s " " | cut -d" " -f3)
+
+echo "$IP" >> js/blank.html
+
+sleep 2 
 
 php -f install.php -- \
     --license_agreement_accepted "yes" \
@@ -12,7 +17,7 @@ php -f install.php -- \
     --db_name "magento" \
     --db_user "magento" \
     --db_pass '19641995' \
-    --url "${MAGE_SITE_URL}" \
+    --url "http://104.248.217.0/" \
     --use_rewrites "yes" \
     --use_secure "no" \
     --secure_base_url "" \
