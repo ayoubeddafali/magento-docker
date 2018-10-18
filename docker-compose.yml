@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   cron:
@@ -14,8 +14,7 @@ services:
     volumes:
       - magento_data:/var/www/html
       - ./varnish.secret:/varnish.secret
-      # Enable the next line if you want to add a custom php.ini
-      #- ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
+ #     - ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
 
   ssl:
     image: fballiano/nginx-ssl-for-magento2
@@ -47,30 +46,44 @@ services:
       dockerfile: docker/app/Dockerfile
     image: ayoubensalem/magento1-app
     depends_on:
-      - db
+      - master
+      - redis
+      - redis-cache
+      - cache
+      - clusterdata
     networks:
       - appnet
     volumes:
       - magento_data:/var/www/html
       - ~/.composer/auth.json:/root/.composer/auth.json
-      # Enable the next line if you want to add a custom php.ini
-      #- ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
+      - ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
 
-  db:
+  master:
+    hostname: 'master'
     image: mysql:5.7
-    ports:
-      - "3306:3306"
-    # volumes:
-    #   - dbdata:/var/lib/mysql
-    networks:
-      - appnet
     environment:
       - MYSQL_ROOT_PASSWORD=19641995
-      - MYSQL_DATABASE=magento
       - MYSQL_USER=magento
       - MYSQL_PASSWORD=19641995
+      - MYSQL_DATABASE=magento
+    ports:
+      - "3306:3306"
+    networks:
+      - appnet 
  
-  cache:
+  
+  redis-cache: 
+    image: redis
+    networks:
+      - appnet 
+
+  redis: 
+    image: redis
+    networks:
+      - appnet 
+
+
+  cache: 
     image: fballiano/redis-volatile
     networks:
       - appnet 

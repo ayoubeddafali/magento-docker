@@ -22,6 +22,6 @@ RUN curl -O https://files.magerun.net/n98-magerun.phar \
 
 VOLUME /var/www/html
 
-#ENTRYPOINT [ "./install.sh" ]
+ENTRYPOINT [ "./install.sh" ]
 
 CMD ["/start.sh"]
