@@ -3,11 +3,10 @@
 /wait-for-it.sh -t 0 master:3306
 
 export IP=$(ip addr show eth0  | grep inet | tr -s " " | cut -d" " -f3)
-
 echo "$IP" >> js/blank.html
-
 sleep 2 
 
+/wait-for-it.sh redis:6379
 /wait-for-it.sh -q -t 5 apache:80
 
 
@@ -36,7 +35,6 @@ php -f install.php -- \
     --admin_password 'soliye12F' \
     --session_save  "db"
 
-
 sed -i "/<global>/ a\\
  <session_save>db</session_save> \\
 	<redis_session> \\
@@ -44,7 +42,7 @@ sed -i "/<global>/ a\\
 	<port>6379</port> \\
 	<password></password> \\
 	<timeout>10</timeout> \\
-	<persistent><![CDATA[db1]]></persistent> \\
+	<persistent></persistent> \\
 	<db>1</db> \\
 	<compression_threshold>2048</compression_threshold> \\
 	<compression_lib>lzf</compression_lib> \\
@@ -66,7 +64,7 @@ sed -i "/<global>/ a\\
           <auto_refresh_fast_cache>1</auto_refresh_fast_cache> \\
             <server>redis-cache</server> \\
             <port>6379</port> \\
-            <persistent><![CDATA[db1]]></persistent> \\
+            <persistent></persistent> \\
             <database>1</database> \\
             <password></password> \\
             <force_standalone>0</force_standalone> \\
@@ -83,5 +81,6 @@ sed -i "/<global>/ a\\
     sed -i "s/false/true/" /var/www/html/app/etc/modules/Cm_RedisSession.xml
 
 fi 
+
 
 exec "$@"

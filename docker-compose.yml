@@ -56,7 +56,7 @@ services:
     volumes:
       - magento_data:/var/www/html
       - ~/.composer/auth.json:/root/.composer/auth.json
-      - ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
+#      - ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
 
   master:
     hostname: 'master'

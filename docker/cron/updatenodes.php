@@ -1,10 +1,12 @@
 <?php
 
 $probe_file = "/fb_host_probe.txt";
-
 class Mage {
   public static function throwException($msg) {
     die($msg);
+  }
+  public static function getStoreConfig($text){
+  	return false;  
   }
 }
 
@@ -16,7 +18,6 @@ $varnish = new Nexcessnet_Turpentine_Model_Varnish_Admin_Socket(array(
 	"host" => "varnish",
 	"auth_secret" => file_get_contents("/varnish.secret")
 ));
-
 // get first VCL (there should be always only one)
 $vcl = $varnish->vcl_list();
 if ($vcl["code"] != Nexcessnet_Turpentine_Model_Varnish_Admin_Socket::CODE_OK) die("Unable to read VCLs from Varnish");
@@ -36,18 +37,19 @@ foreach ($hosts as $host) {
   $apaches[$hostname] = $host;
 }
 ksort($apaches);
-
 $hosts_to_add_to_vcl = "";
 foreach ($apaches as $name=>$ip) {
   $hosts_to_add_to_vcl .= "backend $name {\n\t.host = \"$ip\";\n\t.port = \"80\";\n\t.probe = {.url = \"{$probe_file}\";.timeout = 1s;.interval = 5s;.window = 1;.threshold = 1;}\n}\n";
 }
-
 $hosts_to_add_to_vcl .= "sub vcl_init {\n\tnew cluster1 = directors.round_robin();\n";
 foreach ($apaches as $name=>$ip) {
   $hosts_to_add_to_vcl .= "\tcluster1.add_backend($name);\n";
 }
 $hosts_to_add_to_vcl .= "}\n";
 $hosts_to_add_to_vcl .= "sub vcl_recv {set req.backend_hint = cluster1.backend();}\n";
+
+
+
 
 $new_vcl = "";
 foreach ($vcl as $line) {
@@ -56,14 +58,16 @@ foreach ($vcl as $line) {
     $new_vcl .= $hosts_to_add_to_vcl;
   }
 }
-
 // send the new VCL
 $vcl_name = "autogenated" . time();
 $varnish->vcl_inline($vcl_name, $new_vcl);
 sleep(1);
 $varnish->vcl_use($vcl_name);
+var_dump($varnish->getHost()); 
+var_dump($varnish->getPort()); 
 
 // remove all VCL exept the last one
+/*
 $vcls = $varnish->vcl_list();
 if ($vcls["code"] == Nexcessnet_Turpentine_Model_Varnish_Admin_Socket::CODE_OK) {
   $vcls = explode("\n", trim($vcls["text"]));
@@ -74,3 +78,4 @@ if ($vcls["code"] == Nexcessnet_Turpentine_Model_Varnish_Admin_Socket::CODE_OK) 
     $varnish->vcl_discard($vcl_to_remove);
   }
 }
+*/
