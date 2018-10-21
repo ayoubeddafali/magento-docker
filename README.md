@@ -5,6 +5,8 @@
 ## How To Run :
 
 ```bash
+  $ git clone <URL>
+  $ docker-compose build
   $ docker-compose up -d
 ```
 
