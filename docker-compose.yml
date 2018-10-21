@@ -13,11 +13,12 @@ services:
       - appnet
     volumes:
       - magento_data:/var/www/html
-      - ./varnish.secret:/varnish.secret
- #     - ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
 
-  ssl:
-    image: fballiano/nginx-ssl-for-magento2
+  nginx-ssl:
+    build:
+      context: docker/varnish
+      dockerfile: Dockerfile
+    image: ayoubensalem/magento1-nginx
     depends_on:
       - varnish
     networks:
@@ -26,7 +27,10 @@ services:
       - "443:443"
 
   varnish:
-    image: fballiano/varnish
+    build:
+      context: docker/varnish
+      dockerfile: Dockerfile
+    image: ayoubensalem/magento1-varnish
     ports:
       - "80:80"
       - "6082:6082"
@@ -34,32 +38,25 @@ services:
       - apache
     networks:
       - appnet 
-    volumes:
-      - ./varnish.vcl:/etc/varnish/default.vcl
-      - ./varnish.secret:/etc/varnish/secret
     environment:
       - CACHE_SIZE=256M
 
   apache:
     build:
-      context: .
-      dockerfile: docker/app/Dockerfile
+      context: docker/app
+      dockerfile: Dockerfile
     image: ayoubensalem/magento1-app
     depends_on:
-      - master
+      - mysql
       - redis
       - redis-cache
-      - cache
       - clusterdata
     networks:
       - appnet
     volumes:
       - magento_data:/var/www/html
-      - ~/.composer/auth.json:/root/.composer/auth.json
-#      - ./php.ini:/usr/local/etc/php/conf.d/999-customphp.ini
 
-  master:
-    hostname: 'master'
+  mysql:
     image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=19641995
@@ -82,20 +79,16 @@ services:
     networks:
       - appnet 
 
-
-  cache: 
-    image: fballiano/redis-volatile
-    networks:
-      - appnet 
-
   clusterdata:
-    image: fballiano/redis-volatile
+    build:
+      context: docker/cluster-data
+      dockerfile: Dockerfile
+    image: ayoubensalem/magento1-clusterdata
     networks: 
       - appnet 
 
 
 networks:
   appnet:
-    driver: bridge
 volumes:
   magento_data:

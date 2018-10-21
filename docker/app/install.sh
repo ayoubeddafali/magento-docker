@@ -1,6 +1,6 @@
 #!/usr/bin/env  bash
 
-/wait-for-it.sh -t 0 master:3306
+/wait-for-it.sh -t 0 mysql:3306
 
 export IP=$(ip addr show eth0  | grep inet | tr -s " " | cut -d" " -f3)
 echo "$IP" >> js/blank.html
@@ -17,7 +17,7 @@ php -f install.php -- \
     --locale "${MAGE_LOCALE}" \
     --timezone "${MAGE_TIMEZONE}" \
     --default_currency "${MAGE_CURRENCY}" \
-    --db_host "master" \
+    --db_host "mysql" \
     --db_name "magento" \
     --db_user "magento" \
     --db_pass '19641995' \

@@ -1,10 +1,11 @@
 FROM ayoubensalem/magento1-app
-MAINTAINER Fabrizio Balliano <fabrizio@fabrizioballiano.com>
+MAINTAINER Ayoub Ed-dafali <ayoubensalem@gmail.com>
 
 ADD crontab /crontab.www-data
 ADD start.sh /start.sh
 ADD https://raw.githubusercontent.com/nexcess/magento-turpentine/master/app/code/community/Nexcessnet/Turpentine/Model/Varnish/Admin/Socket.php /varnish.php
 ADD updatenodes.php /updatenodes.php
+ADD varnish.secret /varnish.secret
 
 RUN apt-get update && apt-get install -y cron rsyslog && apt-get clean
 RUN crontab -u www-data /crontab.www-data; \
