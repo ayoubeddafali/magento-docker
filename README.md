@@ -2,6 +2,8 @@
 
 > This is a Work In Progress Project based on : https://github.com/fballiano/docker-magento2
 
+![](demo/docker-compose.png)
+
 ## How To Run :
 
 ```bash
