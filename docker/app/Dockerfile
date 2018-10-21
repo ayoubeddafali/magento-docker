@@ -12,7 +12,7 @@ RUN apt-get update \
     libicu-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
-    libpng12-dev \
+    libpng-dev \
     libxslt1-dev \
     git \
     vim \
@@ -34,6 +34,11 @@ RUN docker-php-ext-configure \
     opcache \
     bcmath \
     soap
+
+
+RUN printf "\n" |  pecl install -o  -a -f redis \
+&&  rm -rf /tmp/pear \
+&&  docker-php-ext-enable redis
 
 ADD https://raw.githubusercontent.com/colinmollenhour/credis/master/Client.php /credis.php
 ADD php.ini /usr/local/etc/php/conf.d/888-ayoubensalem.ini

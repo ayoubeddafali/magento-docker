@@ -35,6 +35,7 @@ php -f install.php -- \
     --admin_password 'soliye12F' \
     --session_save  "db"
 
+
 sed -i "/<global>/ a\\
  <session_save>db</session_save> \\
 	<redis_session> \\
@@ -45,7 +46,7 @@ sed -i "/<global>/ a\\
 	<persistent></persistent> \\
 	<db>1</db> \\
 	<compression_threshold>2048</compression_threshold> \\
-	<compression_lib>lzf</compression_lib> \\
+	<compression_lib>gzip</compression_lib> \\
 	<log_level>1</log_level> \\
 	<max_concurrency>64</max_concurrency> \\
 	<break_after_frontend>5</break_after_frontend> \\
@@ -73,12 +74,16 @@ sed -i "/<global>/ a\\
             <automatic_cleaning_factor>0</automatic_cleaning_factor> \\
             <compress_data>1</compress_data> \\
             <compress_tags>1</compress_tags> \\
-            <compress_threshold>204800</compress_threshold> \\
-            <compression_lib>lzf</compression_lib> \\
+            <compress_threshold>20480</compress_threshold> \\
+            <compression_lib>gzip</compression_lib> \\
         </backend_options> \\
     </cache>" /var/www/html/app/etc/local.xml
   
-    sed -i "s/false/true/" /var/www/html/app/etc/modules/Cm_RedisSession.xml
+	sed -i "s/false/true/" /var/www/html/app/etc/modules/Cm_RedisSession.xml
+	rm -rf /var/www/html/var/cache/* 
+	rm -rf /var/www/html/var/sessions/*
+	n98-magerun.phar cache:clean
+	n98-magerun.phar cache:flush
 
 fi 
 
