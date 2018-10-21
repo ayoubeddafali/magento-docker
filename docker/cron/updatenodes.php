@@ -67,7 +67,7 @@ var_dump($varnish->getHost());
 var_dump($varnish->getPort()); 
 
 // remove all VCL exept the last one
-/*
+
 $vcls = $varnish->vcl_list();
 if ($vcls["code"] == Nexcessnet_Turpentine_Model_Varnish_Admin_Socket::CODE_OK) {
   $vcls = explode("\n", trim($vcls["text"]));
@@ -78,4 +78,4 @@ if ($vcls["code"] == Nexcessnet_Turpentine_Model_Varnish_Admin_Socket::CODE_OK) 
     $varnish->vcl_discard($vcl_to_remove);
   }
 }
-*/
+

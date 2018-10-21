@@ -3,7 +3,8 @@ MAINTAINER Ayoub Ed-dafali <ayoubensalem@gmail.com>
 
 ADD crontab /crontab.www-data
 ADD start.sh /start.sh
-ADD https://raw.githubusercontent.com/nexcess/magento-turpentine/master/app/code/community/Nexcessnet/Turpentine/Model/Varnish/Admin/Socket.php /varnish.php
+#ADD https://raw.githubusercontent.com/nexcess/magento-turpentine/master/app/code/community/Nexcessnet/Turpentine/Model/Varnish/Admin/Socket.php /varnish.php
+ADD varnish.php /varnish.php
 ADD updatenodes.php /updatenodes.php
 ADD varnish.secret /varnish.secret
 
