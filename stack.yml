@@ -1,0 +1,84 @@
+version: '3.3'
+
+services:
+  cron:
+    image: ayoubensalem/magento1-cron
+    depends_on:
+      - apache
+      - varnish
+    networks:
+      - appnet
+    volumes:
+      - type: volume 
+        source: data 
+        target: /var/www/html
+
+  nginx-ssl:
+    image: ayoubensalem/magento1-nginx
+    depends_on:
+      - varnish
+    networks:
+      - appnet
+    ports:
+      - "443:443"
+
+  varnish:
+    image: ayoubensalem/magento1-varnish
+    ports:
+      - "80:80"
+      - "6082:6082"
+    depends_on:
+      - apache
+    networks:
+      - appnet 
+    environment:
+      - CACHE_SIZE=256M
+
+  apache:
+    image: ayoubensalem/magento1-app
+    depends_on:
+      - mysql
+      - redis
+      - redis-cache
+      - clusterdata
+    networks:
+      - appnet
+    volumes:
+      - type: volume 
+        source: data 
+        target: /var/www/html
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=19641995
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=19641995
+      - MYSQL_DATABASE=magento
+    ports:
+      - "3306:3306"
+    networks:
+      - appnet 
+ 
+  
+  redis-cache: 
+    image: redis
+    networks:
+      - appnet 
+
+  redis: 
+    image: redis
+    networks:
+      - appnet 
+
+  clusterdata:
+    image: ayoubensalem/magento1-clusterdata
+    networks: 
+      - appnet 
+
+
+networks:
+  appnet:
+volumes:
+  data:
+    driver: rexray/dobs
