@@ -1,7 +1,14 @@
 --- #
+
+- hosts: all
+  remote_user: root 
+  roles:
+    - geerlingguy.docker
+
 - hosts: all
   strategy: free
   remote_user: root
+
 
   tasks:
     - name: Disable SELinux
@@ -21,29 +28,24 @@
         timeout: 300
       when: task_result is changed
 
-- hosts: swarms
-  remote_user: root
-  roles:
-    - geerlingguy.docker
-
-- hosts: ha-proxy
-  remote_user: root
+- hosts: ha-proxy 
+  remote_user: root 
   tasks:
-    - name: Install Haproxy
+    - name: Install Haproxy 
       package:
         name: haproxy
         state: present
-    - name: Update Haproxy Configuration
-      template:
+    - name: Update Haproxy Configuration 
+      template: 
         src: templates/ha.j2
         dest: /etc/haproxy/haproxy.cfg
-    - name: Enable Haproxy Service
-      service:
-        name: haproxy
-        enabled: yes
+    - name: Enable Haproxy Service 
+      service: 
+        name: haproxy 
+        enabled: yes 
     # - name: enable haproxy_connect_any
     #   shell: setsebool haproxy_connect_any on
-    - name: Restart Haproxy Service
-      service:
-        name : haproxy
-        state : restarted
+    - name: Restart Haproxy Service 
+      service: 
+        name : haproxy 
+        state : restarted 

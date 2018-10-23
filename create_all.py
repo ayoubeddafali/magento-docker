@@ -6,7 +6,7 @@ manager = digitalocean.Manager(token=TOKEN)
 
 keys = manager.get_all_sshkeys()
 
-droplets = ["target"]
+droplets = ["local", "slave1", "slave2", "ha-proxy"]
 
 for droplet in droplets :
     d = digitalocean.Droplet(token=TOKEN,
@@ -24,9 +24,9 @@ for droplet in droplets :
 f =  open("hosts", "w")
 my_droplets = manager.get_all_droplets()
 print("=> {} machine(s) has been created : ".format(len(my_droplets)))
-target_ip = ""
+local_ip = ""
 seen = []
-
+slaves_ip = []
 while len(seen) != len(my_droplets) :
     for droplet in my_droplets:
         if droplet.name in seen:
@@ -36,10 +36,24 @@ while len(seen) != len(my_droplets) :
             if droplet.status == "active":
                 seen.append(droplet.name)
                 print(" - {}".format(droplet.name))
-                if "target" in droplet.name:
-                    target_ip = droplet.ip_address
-                    f.write("\n[target]\n{}\n".format(target_ip))
+                if "haproxy" in droplet.name:
+                    f.write("\n[ha-proxy]\n{}\n".format(droplet.ip_address))
+                elif "slave" in droplet.name:
+                    slaves_ip.append(droplet.ip_address)
+                if "local" in droplet.name:
+                    f.write("\n[local]\n{}\n".format(target_ip))
     my_droplets = manager.get_all_droplets()
+
+
+f.write("\n[slaves]\n")
+for ip in slaves_ip:
+    f.write("{}\n".format(ip))
+
+
+f.write("\n[swarm]\n")
+f.write("{}\n".format(local_ip))
+for ip in slaves_ip:
+    f.write("{}\n".format(ip))
 
 f.close()
 

@@ -1,0 +1,21 @@
+--- # Playbook for setting up swarm cluster
+- name: Init Swarm Master
+  hosts: local
+  gather_facts: False
+  remote_user: root
+  tasks:
+    - name: Leave Swarm Cluster
+      command: docker swarm leave --force
+      register: result
+      failed_when: result.rc == 100
+
+- name: Join Swarm Cluster
+  hosts: slaves
+  remote_user: root
+  gather_facts: False
+  tasks:
+    - name: Leave Swarm Cluster
+      command: docker swarm leave --force
+      register: result
+      failed_when: result.rc == 100
+
