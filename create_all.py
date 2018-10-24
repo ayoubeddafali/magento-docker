@@ -36,9 +36,9 @@ while len(seen) != len(my_droplets) :
             if droplet.status == "active":
                 seen.append(droplet.name)
                 print(" - {}".format(droplet.name))
-                elif "slave" in droplet.name:
+                if "slave" in droplet.name:
                     slaves_ip.append(droplet.ip_address)
-                if "local" in droplet.name:
+                elif "local" in droplet.name:
                     local_ip = droplet.ip_address
                     f.write("\n[local]\n{}\n".format(droplet.ip_address))
     my_droplets = manager.get_all_droplets()

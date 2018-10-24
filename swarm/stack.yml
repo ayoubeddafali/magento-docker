@@ -21,7 +21,7 @@ services:
       - appnet
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
-      - $(pwd)/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "443:443"
     deploy:
@@ -65,11 +65,6 @@ services:
       - "3306:3306"
     networks:
       - appnet
-    healthcheck:
-      test: curl -sS mysql:3306 || exit 1
-      interval: 5s
-      timeout: 5s
-      retries: 10
 
   redis-cache:
     image: redis

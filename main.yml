@@ -21,8 +21,13 @@
         timeout: 300
       when: task_result is changed
 
-- hosts: swarms
+- hosts: swarm
   remote_user: root
   roles:
     - geerlingguy.docker
 
+- hosts: swarm
+  remote_user: root 
+  tasks:
+    - name: Install dobs plugin
+      shell:  docker plugin install --grant-all-permissions  rexray/dobs DOBS_REGION=sfo2 DOBS_TOKEN=4eff8c176d371f86d11ac90c1e0221d1bdfe0a3066b24fb9ab4bf155f8a81fc0 DOBS_CONVERTUNDERSCORES=true
