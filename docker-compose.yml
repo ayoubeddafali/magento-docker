@@ -4,7 +4,7 @@ services:
   cron:
     build:
       context: docker/cron
-      dockerfile: Dockerfile 
+      dockerfile: Dockerfile
     image: ayoubensalem/magento1-cron
     depends_on:
       - apache
@@ -37,7 +37,7 @@ services:
     depends_on:
       - apache
     networks:
-      - appnet 
+      - appnet
     environment:
       - CACHE_SIZE=256M
 
@@ -66,26 +66,27 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - appnet 
- 
-  
-  redis-cache: 
-    image: redis
-    networks:
-      - appnet 
+      - appnet
 
-  redis: 
+
+  redis-cache:
     image: redis
     networks:
-      - appnet 
+      - appnet
+
+  redis:
+    image: redis
+    networks:
+      - appnet
 
   clusterdata:
     build:
       context: docker/cluster-data
       dockerfile: Dockerfile
     image: ayoubensalem/magento1-clusterdata
-    networks: 
-      - appnet 
+    networks:
+      - appnet
+
 
 
 networks:

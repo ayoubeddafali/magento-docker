@@ -9,8 +9,8 @@ services:
     networks:
       - appnet
     volumes:
-      - type: volume 
-        source: data 
+      - type: volume
+        source: data
         target: /var/www/html
 
   nginx-ssl:
@@ -30,7 +30,7 @@ services:
     depends_on:
       - apache
     networks:
-      - appnet 
+      - appnet
     environment:
       - CACHE_SIZE=256M
 
@@ -44,8 +44,8 @@ services:
     networks:
       - appnet
     volumes:
-      - type: volume 
-        source: data 
+      - type: volume
+        source: data
         target: /var/www/html
 
   mysql:
@@ -58,23 +58,40 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - appnet 
- 
-  
-  redis-cache: 
-    image: redis
-    networks:
-      - appnet 
+      - appnet
+    healthcheck:
+      test: curl -sS mysql:3306 || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-  redis: 
+  redis-cache:
     image: redis
     networks:
-      - appnet 
+      - appnet
+
+  redis:
+    image: redis
+    networks:
+      - appnet
 
   clusterdata:
     image: ayoubensalem/magento1-clusterdata
-    networks: 
-      - appnet 
+    networks:
+      - appnet
+
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - appnet
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
 
 
 networks:

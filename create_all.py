@@ -25,6 +25,7 @@ f =  open("hosts", "w")
 my_droplets = manager.get_all_droplets()
 print("=> {} machine(s) has been created : ".format(len(my_droplets)))
 local_ip = ""
+target_ip = ""
 seen = []
 slaves_ip = []
 while len(seen) != len(my_droplets) :
@@ -37,11 +38,12 @@ while len(seen) != len(my_droplets) :
                 seen.append(droplet.name)
                 print(" - {}".format(droplet.name))
                 if "haproxy" in droplet.name:
+                    target_ip = droplet.ip_address
                     f.write("\n[ha-proxy]\n{}\n".format(droplet.ip_address))
                 elif "slave" in droplet.name:
                     slaves_ip.append(droplet.ip_address)
                 if "local" in droplet.name:
-                    f.write("\n[local]\n{}\n".format(target_ip))
+                    f.write("\n[local]\n{}\n".format(droplet.ip_address))
     my_droplets = manager.get_all_droplets()
 
 
