@@ -26,24 +26,3 @@
   roles:
     - geerlingguy.docker
 
-- hosts: ha-proxy
-  remote_user: root
-  tasks:
-    - name: Install Haproxy
-      package:
-        name: haproxy
-        state: present
-    - name: Update Haproxy Configuration
-      template:
-        src: templates/ha.j2
-        dest: /etc/haproxy/haproxy.cfg
-    - name: Enable Haproxy Service
-      service:
-        name: haproxy
-        enabled: yes
-    # - name: enable haproxy_connect_any
-    #   shell: setsebool haproxy_connect_any on
-    - name: Restart Haproxy Service
-      service:
-        name : haproxy
-        state : restarted

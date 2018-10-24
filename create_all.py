@@ -6,7 +6,7 @@ manager = digitalocean.Manager(token=TOKEN)
 
 keys = manager.get_all_sshkeys()
 
-droplets = ["local", "slave1", "slave2", "ha-proxy"]
+droplets = ["local", "slave1", "slave2"]
 
 for droplet in droplets :
     d = digitalocean.Droplet(token=TOKEN,
@@ -25,7 +25,6 @@ f =  open("hosts", "w")
 my_droplets = manager.get_all_droplets()
 print("=> {} machine(s) has been created : ".format(len(my_droplets)))
 local_ip = ""
-target_ip = ""
 seen = []
 slaves_ip = []
 while len(seen) != len(my_droplets) :
@@ -37,12 +36,10 @@ while len(seen) != len(my_droplets) :
             if droplet.status == "active":
                 seen.append(droplet.name)
                 print(" - {}".format(droplet.name))
-                if "haproxy" in droplet.name:
-                    target_ip = droplet.ip_address
-                    f.write("\n[ha-proxy]\n{}\n".format(droplet.ip_address))
                 elif "slave" in droplet.name:
                     slaves_ip.append(droplet.ip_address)
                 if "local" in droplet.name:
+                    local_ip = droplet.ip_address
                     f.write("\n[local]\n{}\n".format(droplet.ip_address))
     my_droplets = manager.get_all_droplets()
 
@@ -62,13 +59,13 @@ f.close()
 
 domain = digitalocean.Domain(token=TOKEN)
 domain.name = "ayoubensalem.com"
-domain.ip_address = target_ip
+domain.ip_address = local_ip
 try:
     d = domain.create()
 except Exception as e:
     print(e)
 
 print("=> ayoubensalem.com domain has been created.")
-domain.create_new_domain_record(type="A", name="docker",data=target_ip)
+domain.create_new_domain_record(type="A", name="docker",data=local_ip)
 print("=> docker.ayoubensalem.com domain has been created. ")
 
