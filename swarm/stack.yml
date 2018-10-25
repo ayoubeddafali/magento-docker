@@ -64,6 +64,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
+      - ./sample:/docker-entrypoint-initdb.d
       - mysql_data:/var/lib/mysql
     networks:
       - appnet
