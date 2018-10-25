@@ -63,21 +63,29 @@ services:
       - MYSQL_DATABASE=magento
     ports:
       - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
       - appnet
 
   redis-cache:
     image: redis
+    volumes:
+      - cache_data:/data
     networks:
       - appnet
 
   redis:
     image: redis
+    volumes:
+      - session_data:/data
     networks:
       - appnet
 
   clusterdata:
-    image: ayoubensalem/magento1-clusterdata
+    image: redis
+    volumes:
+      - cluster_data:/data
     networks:
       - appnet
 
@@ -98,5 +106,13 @@ services:
 networks:
   appnet:
 volumes:
+  mysql_data:
+    driver: rexray/dobs
+  session_data:
+    driver: rexray/dobs
+  cache_data:
+    driver: rexray/dobs
+  cluster_data:
+    driver: rexray/dobs
   data:
     driver: rexray/dobs
