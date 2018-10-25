@@ -49,4 +49,4 @@
   remote_user: root
   tasks:
     - name: Generate SSL Certificat with certbot
-      shell: ./certbot.sh
+      script: certbot.sh
