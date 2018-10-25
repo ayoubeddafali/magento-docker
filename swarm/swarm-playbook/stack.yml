@@ -43,3 +43,10 @@
     - name: Show Errors
       debug: var=worker.stderr
 
+- name: Install SSL certificates
+  hosts: local
+  gather_facts: False
+  remote_user: root
+  tasks:
+    - name: Generate SSL Certificat with certbot
+      shell: ./certbot.sh
