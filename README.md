@@ -28,7 +28,9 @@ Verify that you have Ansible Installed, and ssh established with the instances, 
 ```
 
 Note that the swarm cluster use Digital Ocean Block Storage to save data into volumes, using  the  [rexray/dobs plugins](https://rexray.readthedocs.io/en/stable/user-guide/schedulers/docker/plug-ins/digitalocean/), so we can scale the containers and restore the state of the application when one nodes goes down.
+
 There are 5 volumes in total :
+
  - mysql_data: For Mysql  data
  - redis_datan: For session data
  - cache_data: For magento cache
