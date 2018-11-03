@@ -16,7 +16,6 @@ services:
       restart_policy:
         condition: on-failure
         delay: 5s
-        max_attempts: 10
         window: 120s
 
   nginx-ssl:
@@ -49,7 +48,6 @@ services:
       restart_policy:
         condition: on-failure
         delay: 5s
-        max_attempts: 10
         window: 120s
 
   apache:
@@ -69,7 +67,6 @@ services:
       restart_policy:
         condition: on-failure
         delay: 5s
-        max_attempts: 10
         window: 120s
 
   mysql:
@@ -92,7 +89,6 @@ services:
       restart_policy:
         condition: on-failure
         delay: 5s
-        max_attempts: 10
         window: 120s
 
   redis-cache:
@@ -105,7 +101,6 @@ services:
       restart_policy:
         condition: on-failure
         delay: 5s
-        max_attempts: 10
         window: 120s
 
   redis:
@@ -118,7 +113,6 @@ services:
       restart_policy:
         condition: on-failure
         delay: 5s
-        max_attempts: 10
         window: 120s
 
   clusterdata:
@@ -131,9 +125,8 @@ services:
       restart_policy:
         condition: on-failure
         delay: 5s
-        max_attempts: 10
         window: 120s
-        
+
   portainer:
     image: portainer/portainer
     ports:
