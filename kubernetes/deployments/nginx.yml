@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-ssl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-ssl
+  template:
+    metadata:
+      labels:
+        app: nginx-ssl
+    spec:
+      containers:
+      - name: nginx-ssl
+        image: nginx:stable-alpine
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: varnish
+            port: 80
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+      restartPolicy: Always
+      volumeMounts:
+      - mountPath: /var/www/html
+        name: app_data
+  volumes:
+  - name: app_data
+    flexVolume:
+      driver: rexray/dobs
+

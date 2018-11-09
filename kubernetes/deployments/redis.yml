@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis
+        imagePullPolicy: Always
+      restartPolicy: Always
+    volumeMounts:
+    - mountPath: /data
+      name: session_data
+  volumes:
+  - name: session_data
+    flexVolume:
+      driver: rexray/dobs

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-cache
+  template:
+    metadata:
+      labels:
+        app: redis-cache
+    spec:
+      containers:
+      - name: redis-cache
+        image: redis
+        imagePullPolicy: Always
+      restartPolicy: Always
+    volumeMounts:
+    - mountPath: /data
+      name: cluster_data
+  volumes:
+  - name: cluster_data
+    flexVolume:
+      driver: rexray/dobs

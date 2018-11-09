@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: varnish
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: varnish
+  template:
+    metadata:
+      labels:
+        app: varnish
+    spec:
+      containers:
+      - name: varnish
+        image: ayoubensalem/magento1-varnish
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: apache
+            port: 80
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+      restartPolicy: Always

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: apache
+        image: ayoubensalem/magento1-sampledata
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+      restartPolicy: Always
+    volumeMounts:
+    - mountPath: /var/www/html
+      name: app_data
+  volumes:
+  - name: app_data
+    flexVolume:
+      driver: rexray/dobs

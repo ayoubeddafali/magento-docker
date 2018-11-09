@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cron
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cron
+  template:
+    metadata:
+      labels:
+        app: cron
+    spec:
+      containers:
+      - name: cron
+        image: ayoubensalem/magento1-cron
+        imagePullPolicy: Always
+      restartPolicy: Always
+    volumeMounts:
+    - mountPath: /var/www/html
+      name: app_data
+  volumes:
+  - name: app_data
+    flexVolume:
+      driver: rexray/dobs
+

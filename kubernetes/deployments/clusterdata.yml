@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clusterdata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clusterdata
+  template:
+    metadata:
+      labels:
+        app: clusterdata
+    spec:
+      containers:
+      - name: clusterdata
+        image: redis
+        imagePullPolicy: Always
+      restartPolicy: Always
+    volumeMounts:
+    - mountPath: /data
+      name: cluster_data
+  volumes:
+  - name: cluster_data
+    flexVolume:
+      driver: rexray/dobs
