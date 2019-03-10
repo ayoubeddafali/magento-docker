@@ -1,3 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-ssl
+spec:
+  ports:
+    - name: nginx-port
+      port: 443
+      targetPort: 443
+  selector:
+    app: nginx-ssl
+  type: LoadBalancer
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,7 +30,7 @@ spec:
         image: nginx:stable-alpine
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 443
         livenessProbe:
           httpGet:
             path: varnish
@@ -25,11 +38,3 @@ spec:
           initialDelaySeconds: 30
           timeoutSeconds: 1
       restartPolicy: Always
-      volumeMounts:
-      - mountPath: /var/www/html
-        name: app_data
-  volumes:
-  - name: app_data
-    flexVolume:
-      driver: rexray/dobs
-
