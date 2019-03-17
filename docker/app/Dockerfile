@@ -60,24 +60,17 @@ RUN usermod -u 1000 www-data; \
 
 
 
-COPY magento /var/www/html
+#COPY magento /var/www/html
 WORKDIR /var/www/html
 
-ADD install.sh .
+ADD install.sh /install.sh
 ADD wait-for-it.sh /wait-for-it.sh
 
-RUN chmod +x install.sh \
-&& chmod +x mage \
+RUN chmod +x /install.sh \
 && chmod +x /wait-for-it.sh 
-
-RUN curl -O https://files.magerun.net/n98-magerun.phar \
-&& chmod +x ./n98-magerun.phar  \
-&& mv n98-magerun.phar /usr/local/bin/  \
-&& ./mage mage-setup . \
-&& chmod -R 777 . 
 
 VOLUME /var/www/html
 
-ENTRYPOINT [ "./install.sh" ]
+ENTRYPOINT [ "/install.sh" ]
 
 CMD ["/start.sh"]

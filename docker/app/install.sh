@@ -1,9 +1,20 @@
 #!/usr/bin/env  bash
 
+cd /var/www/html
+
+chmod +x mage 
+
+curl -O https://files.magerun.net/n98-magerun.phar \
+&& chmod +x ./n98-magerun.phar  \
+&& mv n98-magerun.phar /usr/local/bin/  \
+&& ./mage mage-setup . \
+&& chmod -R 777 . 
+
+
 /wait-for-it.sh -t 0 mysql:3306
 
-export IP=$(ip addr show eth0  | grep inet | tr -s " " | cut -d" " -f3)
-echo "$IP" >> js/blank.html
+#export IP=$(ip addr show eth0  | grep inet | tr -s " " | cut -d" " -f3)
+#echo "$IP" >> js/blank.html
 sleep 2 
 
 /wait-for-it.sh redis:6379

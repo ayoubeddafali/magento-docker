@@ -8,7 +8,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: rook-ceph-block
+  storageClassName: do-block-storage
 ---
 kind: Service
 apiVersion: v1
@@ -21,7 +21,7 @@ spec:
       targetPort: 3306
   selector:
     app: mysql
-  type: LoadBalancer
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment

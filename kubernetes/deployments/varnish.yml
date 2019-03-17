@@ -7,7 +7,7 @@ spec:
     - name: varnish-port
       port: 80
       targetPort: 80
-    - name: varnish-internal-port
+    - name: varnal-port
       port: 6082
       targetPort: 6082
   selector:
@@ -36,7 +36,7 @@ spec:
         - containerPort: 80
           name: varinsh-port
         - containerPort: 6082
-          name: varnish-internal-port
+          name: varnal-port
         livenessProbe:
           httpGet:
             path: apache

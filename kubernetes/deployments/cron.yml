@@ -1,12 +1,3 @@
-kind: Service
-apiVersion: v1
-metadata:
-  name: cron
-spec:
-  selector:
-    app: cron
-  type: NodePort
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,13 +14,13 @@ spec:
     spec:
       containers:
       - name: cron
-        image: ayoubensalem/magento1-cron
+        image: ayoubensalem/magento1-cron:test
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /var/www/html
-          name: cron-data
+          name: nfs
       restartPolicy: Always
       volumes:
-      - name: cron-data
+      - name: nfs
         persistentVolumeClaim:
-          claimName: apache-pvc  
+          claimName: nfs

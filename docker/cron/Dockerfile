@@ -1,4 +1,4 @@
-FROM ayoubensalem/magento1-app
+FROM ayoubensalem/magento1-app:test
 MAINTAINER Ayoub Ed-dafali <ayoubensalem@gmail.com>
 
 ADD crontab /crontab.www-data
