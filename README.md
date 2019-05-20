@@ -1,8 +1,6 @@
 # Dockerized Magento 1
 
-> This is a Work In Progress Project based on : https://github.com/fballiano/docker-magento2
-
-### You can run this project in standalone environment or in a swarm cluster
+### You can run this project in standalone environment or in a swarm cluster ( K8S is WIP ).
 
 ![](demo/docker-compose.png)
 
